@@ -17,10 +17,11 @@ module top_level(
 
   // instantiate a bto7s module called 'converter'
   bto7s converter(.x_in(sw[3:0]), .s_out(cat_segs));
+  alu changes(.d0_in(sw[15:8]), .d1_in(sw[7:0]), .sel_in({btnl, btnu, btnr}));
 
   // a typo...keep this here for moment
   assign {cg,cf,ce,cd,cc,cb,ca} = ~cat_segs;
-  assign an = 8'b0;
+  assign an = 8'b11111111;
 
   /* we'll use the LEDs later...for now, just link them to the switches
    * and force some lights on
