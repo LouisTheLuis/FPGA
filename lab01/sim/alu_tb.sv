@@ -44,6 +44,7 @@ module alu_tb();
         #10; //wait for a bit of time (10 ns)
         //then evaluate outputs:
         $display("%8b   %8b  %3b     %15b  %b       %b", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
+	$display("%d     %d    %d     %d    %d    %d", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
     end
 
     $display("\n---------\nFinishing Simulation!");
