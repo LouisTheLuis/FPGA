@@ -34,8 +34,8 @@ module alu_tb();
     #10; //wait 10 ns
     //now print something:
     $display("\n---------\nStarting Simulation!");
-    d0_in = 12; //change values!
-    d1_in = 45;
+    d0_in = 0;
+    d1_in = 10;
 
     // run through all operations and monitor outputs
     $display("d1_in      d0_in     sel_in  res_out           eq_out  gt_out");
@@ -44,9 +44,52 @@ module alu_tb();
         #10; //wait for a bit of time (10 ns)
         //then evaluate outputs:
         $display("%8b   %8b  %3b     %15b  %b       %b", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
-	$display("%d     %d    %d     %d    %d    %d", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
     end
 
+    #10;
+    d0_in = 100;
+    d1_in = 10;
+    $display("d1_in      d0_in     sel_in  res_out           eq_out  gt_out");
+    for(integer i = 0; i < 8; i = i + 1) begin
+        sel_in = i; //set sel_in
+        #10; //wait for a bit of time (10 ns)
+        //then evaluate outputs:
+        $display("%8b   %8b  %3b     %15b  %b       %b", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
+    end
+
+    #10;
+    d0_in = 10;
+    d1_in = 100;
+    $display("d1_in      d0_in     sel_in  res_out           eq_out  gt_out");
+    for(integer i = 0; i < 8; i = i + 1) begin
+        sel_in = i; //set sel_in
+        #10; //wait for a bit of time (10 ns)
+        //then evaluate outputs:
+        $display("%8b   %8b  %3b     %15b  %b       %b", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
+    end
+
+    #10;
+    d0_in = 42;
+    d1_in = 42;
+    $display("d1_in      d0_in     sel_in  res_out           eq_out  gt_out");
+    for(integer i = 0; i < 8; i = i + 1) begin
+        sel_in = i; //set sel_in
+        #10; //wait for a bit of time (10 ns)
+        //then evaluate outputs:
+        $display("%8b   %8b  %3b     %15b  %b       %b", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
+    end
+
+    #10;
+    d0_in = 7;
+    d1_in = 42;
+    $display("d1_in      d0_in     sel_in  res_out           eq_out  gt_out");
+    for(integer i = 0; i < 8; i = i + 1) begin
+        sel_in = i; //set sel_in
+        #10; //wait for a bit of time (10 ns)
+        //then evaluate outputs:
+        $display("%8b   %8b  %3b     %15b  %b       %b", d1_in, d0_in, sel_in, res_out, eq_out, gt_out);
+    end
+ 
     $display("\n---------\nFinishing Simulation!");
     $finish; //finish simulation.
   end
