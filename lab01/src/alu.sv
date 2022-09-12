@@ -6,8 +6,8 @@ module alu(input wire [7:0] d0_in,
                             output logic eq_out);
 
    //  YOUR CODE HERE
-   assign gt_out = d0_in == d1_in;   // output corresponding to led16_b
-   assign eq_out = d1_in > d0_in;    //	output corresponding to led17_r
+   assign eq_out = d0_in == d1_in;   // output corresponding to led16_b
+   assign gt_out = d1_in > d0_in;    //	output corresponding to led17_r
    always_comb begin
    	case(sel_in)
 	   3'b000   :   res_out = d0_in + d1_in;
