@@ -1,6 +1,7 @@
 import atexit
 import getopt
 import os
+import shutil
 import subprocess
 import signal
 import sys
@@ -168,7 +169,15 @@ def readfile(p, file, targetfile):
 	
 	xsprecv(p)
 
+def clean(obj):
+	for file in os.listdir(obj):
+		path = os.path.join(obj, file)
+		try: shutil.rmtree(path)
+		except OSError: os.remove(path)
+
 def build(p):
+	ok = True
+
 	cmd = "build"
 	if diagnostics: cmd += " -d"
 	if quiet: cmd += " -q"
@@ -180,10 +189,8 @@ def build(p):
 	print("Building your code ... (this may take a while, be patient)")
 	result = sprecv(p)
 
-	if result.startswith("ERR"): print("Something went wrong!")
-	else:
-		readfile(p, "obj/out.bit", outfile)
-		print(f"Build succeeded, output at {outfile}")
+	if result.startswith("ERR"): ok = False
+	else: readfile(p, "obj/out.bit", outfile)
 	
 	readfile(p, "obj/build.log", logfile)
 	print(f"Log file available at {logfile}")
@@ -197,6 +204,9 @@ def build(p):
 			readfile(p, f"obj/routerpt_{rpt}.rpt", f"{of}/routerpt_{rpt}.rpt")
 		print(f"Diagnostics available in {of}")
 
+	if ok: print(f"Build succeeded! Bitstream available at {outfile}")
+	else: print("Something went wrong! Check the output log...")
+
 def main():
 	global p
 	getargs()
@@ -205,6 +215,8 @@ def main():
 	if not os.path.isdir(of):
 		print(f"output path {of} does not exist! create it or use -o?")
 		usage()
+
+	clean(of)
 	
 	if platform.system() == 'Darwin' or platform.system() == 'Linux':
 		xargv = ['ssh', '-p', f"{port}", '-o', "StrictHostKeyChecking=no", '-o', 'UserKnownHostsFile=/dev/null']
