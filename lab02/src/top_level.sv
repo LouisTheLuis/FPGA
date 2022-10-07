@@ -76,8 +76,8 @@ module top_level( input wire clk_100mhz,
 
    seven_segment_controller mssc(.clk_in(clk_100mhz),
                                  .rst_in(sys_rst),
-                                 //.val_in({ps2_buffer[3], ps2_buffer[2], ps2_buffer[1], ps2_buffer[0]}),
-                                 .val_in(btn_count),
+                                 .val_in({ps2_buffer[3], ps2_buffer[2], ps2_buffer[1], ps2_buffer[0]}),
+                                 //.val_in(btn_count),
                                  .cat_out({cg, cf, ce, cd, cc, cb, ca}),
                                  .an_out(an));
  
@@ -108,16 +108,25 @@ module top_level( input wire clk_100mhz,
   logic [7:0] ps2_code;
   logic ps2_valid;
 
+  always_ff @(posedge clk_100mhz) begin
+	  if (sys_rst) begin
+		  ps2_buffer <= {8'b0, 8'b0, 8'b0, 8'b0};
+	  end else begin
+		  if (ps2_valid) begin
+			  ps2_buffer = {ps2_buffer[2], ps2_buffer[1], ps2_buffer[0], ps2_code};
+		  end
+	  end
+  end
+
   /* Leave this commented out until you get to part 3
    * unless you would like to see more errors...
    */
 
-  /* ps2_decoder mpd (.clk_in(clk_100mhz),.rst_in(sys_rst),
-   *               .ps_data_in(ps2b_d[1]),
-   *               .ps_clk_in(ps2b_c[1]),
-   *               .code_out(ps2_code),
-   *               .code_valid_out(ps2_valid));
-   */
+   ps2_decoder mpd (.clk_in(clk_100mhz),.rst_in(sys_rst),
+                  .ps_data_in(ps2b_d[1]),
+                  .ps_clk_in(ps2b_c[1]),
+                  .code_out(ps2_code),
+                  .code_valid_out(ps2_valid));
 
 endmodule
 

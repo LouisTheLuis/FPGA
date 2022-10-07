@@ -57,6 +57,7 @@ module ps2_decoder( input wire clk_in,
 				end else if (counter == 9) begin
 					if (~ps_data_in != (^code_out)) begin
 						swi <= 0;
+						code_out <= 8'b0000_0000;
 						counter <= 1'b0;
 					end
 				end else if (counter == 10) begin
@@ -70,6 +71,7 @@ module ps2_decoder( input wire clk_in,
 		// clock
 		if (code_valid_out) begin
 			code_valid_out <= 0;
+			code_out <= 8'b0000_0000;
 			counter <= 1'b0;
 		end
 	end
