@@ -3,22 +3,46 @@
 
 module top_level(
   input wire clk_100mhz, //clock @ 100 mhz
-  input wire [15:0] sw, //switches
   input wire btnc, //btnc (used for reset)
+  input wire eth_crsdv,
+  input wire [1:0] eth_rxd,
 
-  input wire [7:0] ja, //lower 8 bits of data from camera
-  input wire [2:0] jb, //upper three bits from camera (return clock, vsync, hsync)
-  output logic jbclk,  //signal we provide to camera
-  output logic jblock, //signal for resetting camera
-
-  output logic [15:0] led, //just here for the funs
-
-  output logic [3:0] vga_r, vga_g, vga_b,
-  output logic vga_hs, vga_vs,
-  output logic [7:0] an,
-  output logic caa,cab,cac,cad,cae,caf,cag
-
+  output logic [15:0] led, 
+  output logic eth_refclk,
+  output logic eth_rstn
   );
+    logic [15:0] counter;
+    logic axiov;
+    logic [1:0] axiod;
+
+    // Global system reset
+    assign eth_rstn = btnc; 
+
+    // Generate 50mhz clock
+    divider clk_div (
+        .clk(clk_100mhz), 
+        .ethclk(eth_refclk));
+
+    // Ethernet module
+    ether eth (
+        .clk(eth_refclk),
+        .rst(eth_rstn),
+        .rxd(eth_rxd),
+        .crsdv(eth_crsdv),
+        .axiov(axiov),
+        .axiod(axiod));
+
+    // LEDs count the number of dibits received from the Ethernet cable
+    always_ff @(posedge eth_refclk) begin
+        if (eth_rstn) begin
+            counter <= 0;
+        end else begin
+            if (axiov) begin
+                counter <= counter + 1;
+            end
+        end
+    end
+    assign led = counter;
 
 endmodule
 
